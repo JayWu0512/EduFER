@@ -1,0 +1,269 @@
+:root {
+  --bg: #f3ede1;
+  --panel: rgba(255, 250, 242, 0.8);
+  --panel-strong: #fffaf0;
+  --line: rgba(51, 32, 12, 0.12);
+  --ink: #2c1c10;
+  --muted: #5d4b3b;
+  --accent: #ba5a31;
+  --accent-deep: #7f2e17;
+  --sage: #7b8f61;
+  --sky: #d8ebe6;
+  --warning: #b67b12;
+  --danger: #984727;
+  --shadow: 0 18px 40px rgba(89, 58, 29, 0.15);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(239, 193, 154, 0.42), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(123, 143, 97, 0.26), transparent 24%),
+    linear-gradient(135deg, #fbf8f2 0%, var(--bg) 100%);
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.page-shell {
+  width: min(1200px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px 0 48px;
+}
+
+.hero {
+  display: grid;
+  gap: 28px;
+  grid-template-columns: 1.05fr 1fr;
+  align-items: start;
+}
+
+.hero-copy,
+.camera-panel,
+.info-card,
+.notes-panel {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+}
+
+.hero-copy,
+.camera-panel {
+  border-radius: 30px;
+  padding: 28px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  color: var(--accent-deep);
+}
+
+h1,
+h2 {
+  margin: 0;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 5vw, 4.6rem);
+  line-height: 0.95;
+  max-width: 12ch;
+}
+
+.hero-text {
+  margin: 18px 0 0;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--muted);
+  max-width: 58ch;
+}
+
+.badge-row,
+.state-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.badge,
+.state-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 0.92rem;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.camera-stage {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  aspect-ratio: 4 / 3;
+  background:
+    linear-gradient(135deg, rgba(186, 90, 49, 0.1), rgba(123, 143, 97, 0.18)),
+    #efe4d6;
+}
+
+#webcam,
+#overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#overlay {
+  pointer-events: none;
+}
+
+.camera-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+button {
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 18px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 120ms ease, opacity 120ms ease;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.primary-button {
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+  color: white;
+}
+
+.secondary-button {
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+.status-grid,
+.info-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.status-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 20px;
+}
+
+.info-grid {
+  margin-top: 24px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.status-card,
+.info-card {
+  border-radius: 22px;
+  padding: 20px;
+}
+
+.status-card h2,
+.info-card h2,
+.notes-panel h2 {
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
+
+.status-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.status-text,
+.info-card p,
+.notes-panel p,
+li {
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.notes-panel {
+  margin-top: 24px;
+  border-radius: 28px;
+  padding: 24px 28px;
+}
+
+.notes-list,
+.info-card ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.notes-list {
+  margin-top: 14px;
+}
+
+.state-bored {
+  background: rgba(182, 123, 18, 0.12);
+}
+
+.state-engaged {
+  background: rgba(123, 143, 97, 0.16);
+}
+
+.state-confused {
+  background: rgba(116, 144, 188, 0.16);
+}
+
+.state-frustrated {
+  background: rgba(152, 71, 39, 0.14);
+}
+
+@media (max-width: 960px) {
+  .hero,
+  .status-grid,
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  h1 {
+    max-width: unset;
+  }
+}
+
+@media (max-width: 640px) {
+  .page-shell {
+    width: min(100% - 20px, 1200px);
+    padding-top: 20px;
+  }
+
+  .hero-copy,
+  .camera-panel,
+  .notes-panel {
+    padding: 20px;
+    border-radius: 22px;
+  }
+
+  .camera-actions {
+    flex-direction: column;
+  }
+}
