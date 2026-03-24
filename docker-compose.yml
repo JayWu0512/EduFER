@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  edufer:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    environment:
+      EDUFER_HOST: 0.0.0.0
+      EDUFER_PORT: 8000
+      EDUFER_ALLOWED_ORIGINS: http://localhost:8000,http://127.0.0.1:8000
+      EDUFER_TRUSTED_HOSTS: localhost,127.0.0.1
+      EDUFER_ENABLE_HTTPS_REDIRECT: "false"
+    restart: unless-stopped
