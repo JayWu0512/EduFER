@@ -4,7 +4,11 @@ from pydantic import BaseModel, Field
 
 
 class AnalyzeFrameRequest(BaseModel):
-    image_data: str = Field(..., description="Base64 data URL captured from the webcam.")
+    image_data: str = Field(
+        ...,
+        max_length=5_000_000,
+        description="Base64 data URL captured from the webcam.",
+    )
 
 
 class BoundingBoxResponse(BaseModel):

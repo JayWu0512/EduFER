@@ -3,9 +3,14 @@ from __future__ import annotations
 from pathlib import Path
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+from starlette.middleware.httpsredirect import HTTPSRedirectMiddleware
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 
+from edufer import __version__
+from edufer.api.middleware import MaxRequestSizeMiddleware, SecurityHeadersMiddleware
 from edufer.api.routes import router as api_router
 from edufer.classification.placeholder_classifier import PlaceholderEmotionClassifier
 from edufer.core.settings import DEFAULT_CONFIG_PATH, AppSettings
@@ -37,11 +42,34 @@ def create_app(config_path: str | Path = DEFAULT_CONFIG_PATH) -> FastAPI:
 
     app = FastAPI(
         title=settings.app_name,
-        version="0.1.0",
+        version=__version__,
         summary="Educational engagement demo with webcam capture, YOLO face detection, and a pluggable DL module.",
     )
     app.state.settings = settings
     app.state.pipeline = pipeline
+
+    app.add_middleware(
+        TrustedHostMiddleware,
+        allowed_hosts=settings.security.trusted_hosts,
+    )
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.security.cors_allowed_origins,
+        allow_credentials=settings.security.cors_allow_credentials,
+        allow_methods=settings.security.cors_allowed_methods,
+        allow_headers=settings.security.cors_allowed_headers,
+    )
+    app.add_middleware(
+        MaxRequestSizeMiddleware,
+        max_request_bytes=settings.security.max_request_bytes,
+    )
+    app.add_middleware(
+        SecurityHeadersMiddleware,
+        content_security_policy=settings.security.content_security_policy,
+        permissions_policy=settings.security.permissions_policy,
+    )
+    if settings.security.enable_https_redirect:
+        app.add_middleware(HTTPSRedirectMiddleware)
 
     app.mount("/static", StaticFiles(directory=settings.web.static_dir), name="static")
 

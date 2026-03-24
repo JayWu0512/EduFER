@@ -48,6 +48,8 @@ Default model location:
 
 ```text
 EduFER/
+├── .github/
+│   └── workflows/
 ├── config/
 │   └── app_config.json
 ├── data/
@@ -59,6 +61,8 @@ EduFER/
 │   └── README.md
 ├── scripts/
 │   └── download_face_model.py
+├── Dockerfile
+├── docker-compose.yml
 ├── src/
 │   └── edufer/
 │       ├── api/
@@ -125,25 +129,31 @@ The frontend is a single static page that:
 
 ## Setup
 
-### 1. Create a virtual environment
+### 1. Use Python 3.11
+
+This project is now standardized on **Python 3.11** for local development, Docker, and GitHub Actions.
+
+If you use `pyenv`, the included `.python-version` file will point your shell to Python 3.11 automatically.
+
+### 2. Create a virtual environment
 
 ```bash
-python3 -m venv .venv
+python3.11 -m venv .venv
 source .venv/bin/activate
 ```
 
-### 2. Install dependencies
+### 3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Download the YOLO face detector
+### 4. Download the YOLO face detector
 
 If the model file is not already present, run:
 
 ```bash
-python3 scripts/download_face_model.py
+python3.11 scripts/download_face_model.py
 ```
 
 This downloads the model into:
@@ -152,24 +162,54 @@ This downloads the model into:
 data/models/face_detection/yolov8n-face-lindevs.onnx
 ```
 
-### 4. Start the app
+### 5. Start the app
 
 Option A:
 
 ```bash
-PYTHONPATH=src python3 -m edufer
+PYTHONPATH=src python3.11 -m edufer
 ```
 
 Option B:
 
 ```bash
-PYTHONPATH=src uvicorn edufer.app:app --reload
+PYTHONPATH=src python3.11 -m uvicorn edufer.app:app --reload
 ```
 
 Then open:
 
 ```text
 http://127.0.0.1:8000
+```
+
+## Docker
+
+### Build and run with Docker Compose
+
+```bash
+docker compose up --build
+```
+
+The app will be available at:
+
+```text
+http://127.0.0.1:8000
+```
+
+Notes:
+
+- the Docker image uses **Python 3.11**
+- the image downloads the YOLO face detector during build, so the container is self-contained
+- the container runs as a **non-root user**
+
+### Build the image manually
+
+```bash
+docker build -t edufer:latest .
+docker run --rm -p 8000:8000 \
+  -e EDUFER_ALLOWED_ORIGINS=http://localhost:8000,http://127.0.0.1:8000 \
+  -e EDUFER_TRUSTED_HOSTS=localhost,127.0.0.1 \
+  edufer:latest
 ```
 
 ## How the Demo Works
@@ -229,6 +269,55 @@ This repo is structured so each responsibility stays isolated:
 - `data/`: datasets and model weights
 - `scripts/`: operational utilities such as model download
 
+## Security Defaults
+
+The app now includes baseline production-minded security controls:
+
+- **CORS allowlist** instead of `*`
+- **Trusted host validation** to reject unexpected `Host` headers
+- **request size limit** for inbound webcam payloads
+- **security headers** including CSP, `X-Frame-Options`, `X-Content-Type-Options`, and `Permissions-Policy`
+- optional **HTTPS redirect** via config or environment variable
+
+Default local settings live in `config/app_config.json`. For Docker or deployment environments, you can override them with environment variables:
+
+- `EDUFER_ALLOWED_ORIGINS`
+- `EDUFER_TRUSTED_HOSTS`
+- `EDUFER_ALLOWED_METHODS`
+- `EDUFER_ALLOWED_HEADERS`
+- `EDUFER_ALLOW_CREDENTIALS`
+- `EDUFER_MAX_REQUEST_BYTES`
+- `EDUFER_ENABLE_HTTPS_REDIRECT`
+- `EDUFER_HOST`
+- `EDUFER_PORT`
+
+Example:
+
+```bash
+export EDUFER_ALLOWED_ORIGINS="https://your-frontend.example.com"
+export EDUFER_TRUSTED_HOSTS="your-api.example.com"
+export EDUFER_ENABLE_HTTPS_REDIRECT="true"
+```
+
+If you later split frontend and backend across different domains, update `EDUFER_ALLOWED_ORIGINS` rather than widening CORS to `*`.
+
+## GitHub CI/CD
+
+Two GitHub Actions workflows are included:
+
+- `ci.yml`
+  - runs on push / pull request
+  - uses **Python 3.11**
+  - installs dependencies
+  - runs compile checks and unit tests
+  - validates that the Docker image builds
+- `docker-publish.yml`
+  - runs on pushes to `main`, tags like `v1.0.0`, or manually
+  - builds and publishes a Docker image to **GitHub Container Registry**
+  - image target: `ghcr.io/<owner>/<repo>`
+
+For image publishing, make sure GitHub Actions has package write permission enabled for the repository.
+
 ## Suggested Next Steps
 
 To keep following the proposal, the natural next implementation steps are:
@@ -242,7 +331,7 @@ To keep following the proposal, the natural next implementation steps are:
 ## Running Tests
 
 ```bash
-PYTHONPATH=src python3 -m unittest discover -s tests
+PYTHONPATH=src python3.11 -m unittest discover -s tests
 ```
 
 ## Important Notes

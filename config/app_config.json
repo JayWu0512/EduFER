@@ -18,5 +18,31 @@
   "web": {
     "static_dir": "src/edufer/web/static",
     "capture_interval_ms": 1200
+  },
+  "security": {
+    "cors_allowed_origins": [
+      "http://localhost:8000",
+      "http://127.0.0.1:8000"
+    ],
+    "cors_allowed_methods": [
+      "GET",
+      "POST"
+    ],
+    "cors_allowed_headers": [
+      "Accept",
+      "Authorization",
+      "Content-Type",
+      "Origin"
+    ],
+    "cors_allow_credentials": false,
+    "trusted_hosts": [
+      "localhost",
+      "127.0.0.1",
+      "testserver"
+    ],
+    "max_request_bytes": 5000000,
+    "enable_https_redirect": false,
+    "content_security_policy": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'",
+    "permissions_policy": "camera=(self), microphone=()"
   }
 }
