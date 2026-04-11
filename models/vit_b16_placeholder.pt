@@ -1,0 +1,16 @@
+{
+  "model_name": "ViT-B/16 Placeholder",
+  "architecture": "vit_b_16",
+  "class_names": ["not_engaged", "engaged"],
+  "input_size": 224,
+  "threshold": 0.52,
+  "feature_weights": {
+    "bias": -0.85,
+    "brightness": 1.05,
+    "contrast": 1.05,
+    "edge_density": 0.95,
+    "center_brightness": 0.7,
+    "warm_tone": 0.2
+  },
+  "notes": "Replace this placeholder with a real Vision Transformer checkpoint when ready."
+}

@@ -1,0 +1,16 @@
+{
+  "model_name": "VGG16 Placeholder",
+  "architecture": "vgg16",
+  "class_names": ["not_engaged", "engaged"],
+  "input_size": 224,
+  "threshold": 0.48,
+  "feature_weights": {
+    "bias": -1.0,
+    "brightness": 1.35,
+    "contrast": 0.8,
+    "edge_density": 0.35,
+    "center_brightness": 1.45,
+    "warm_tone": 0.55
+  },
+  "notes": "Replace this placeholder with a real VGG checkpoint when ready."
+}

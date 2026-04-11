@@ -1,0 +1,16 @@
+{
+  "model_name": "ResNet18 Placeholder",
+  "architecture": "resnet18",
+  "class_names": ["not_engaged", "engaged"],
+  "input_size": 224,
+  "threshold": 0.5,
+  "feature_weights": {
+    "bias": -1.15,
+    "brightness": 1.9,
+    "contrast": 0.55,
+    "edge_density": 0.25,
+    "center_brightness": 1.2,
+    "warm_tone": 0.15
+  },
+  "notes": "Replace this placeholder with a real ResNet checkpoint when ready."
+}

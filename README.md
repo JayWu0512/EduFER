@@ -59,6 +59,15 @@ EduFER/
 │   ├── processed/
 │   ├── raw/
 │   └── README.md
+├── models/
+│   ├── resnet18_placeholder.pt
+│   ├── vit_b16_placeholder.pt
+│   ├── vgg16_placeholder.pt
+│   └── README.md
+├── notebooks/
+│   ├── CompareModels.ipynb
+│   └── ResnetFineTune.ipynb
+├── requirements-notebooks.txt
 ├── scripts/
 │   └── download_face_model.py
 ├── Dockerfile
@@ -70,6 +79,7 @@ EduFER/
 │       ├── core/
 │       ├── detection/
 │       ├── pipeline/
+│       ├── research/
 │       ├── utils/
 │       └── web/
 │           └── static/
@@ -236,6 +246,27 @@ Recommended workflow:
 3. Make it implement the same interface as `EmotionClassifier`
 4. Update the classifier construction in `src/edufer/app.py`
 5. Keep the detector, pipeline, frontend, and API unchanged
+
+## Notebook Comparison Workflow
+
+For offline experimentation, the repo now also includes:
+
+- `notebooks/CompareModels.ipynb`
+- placeholder model artifacts in `models/`
+- reusable notebook helpers under `src/edufer/research/`
+
+The notebook is organized so you can:
+
+1. point to `data/processed/0` (`not_engaged`) and `data/processed/1` (`engaged`)
+2. compare ResNet, ViT, and VGG checkpoints from one config block at the top
+3. visualize the preprocessing flow used by the ResNet fine-tuning notebook
+4. inspect per-model confusion matrices, PR curves, and accuracy summaries
+
+Notebook extras can be installed with:
+
+```bash
+pip install -r requirements-notebooks.txt
+```
 
 The key interface is:
 
